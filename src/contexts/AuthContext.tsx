@@ -1,4 +1,4 @@
-'use client'
+"use client"
 
 import React, { createContext, useContext, useEffect, useState } from 'react'
 import { AuthContextType, AuthState, LoginCredentials, User } from '@/types/auth'
@@ -24,11 +24,22 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     isLoading: true
   })
 
+  // Helper para ler cookie no client
+  const getCookie = (name: string) => {
+    if (typeof document === 'undefined') return undefined
+    const value = document.cookie
+      .split('; ')
+      .find((row) => row.startsWith(`${name}=`))
+    return value?.split('=')[1]
+  }
+
   useEffect(() => {
     const savedUser = localStorage.getItem('dashboard_user')
-    const savedAuth = localStorage.getItem('dashboard_auth')
+    const savedAuthLocal = localStorage.getItem('dashboard_auth')
+    const savedAuthCookie = getCookie('dashboard_auth')
+    const isAuth = savedAuthLocal === 'true' || savedAuthCookie === 'true'
     
-    if (savedUser && savedAuth === 'true') {
+    if (savedUser && isAuth) {
       try {
         const user = JSON.parse(savedUser)
         setAuthState({
@@ -65,6 +76,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       ) {
         localStorage.setItem('dashboard_user', JSON.stringify(MOCK_USER))
         localStorage.setItem('dashboard_auth', 'true')
+        // Sinaliza para o middleware via cookie
+        if (typeof document !== 'undefined') {
+          const secureFlag = window.location.protocol === 'https:' ? '; Secure' : ''
+          document.cookie = `dashboard_auth=true; Path=/; Max-Age=${7 * 24 * 60 * 60}; SameSite=Lax${secureFlag}`
+        }
         
         setAuthState({
           user: MOCK_USER,
@@ -86,6 +102,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     localStorage.removeItem('dashboard_user')
     localStorage.removeItem('dashboard_auth')
     localStorage.removeItem('dashboard_filters')
+    // Remove cookie para o middleware
+    if (typeof document !== 'undefined') {
+      const secureFlag = window.location.protocol === 'https:' ? '; Secure' : ''
+      document.cookie = `dashboard_auth=; Path=/; Max-Age=0; SameSite=Lax${secureFlag}`
+    }
     
     setAuthState({
       user: null,
