@@ -13,6 +13,7 @@ const STORAGE_KEY = 'dashboard_filters'
 export function useTransactions() {
   const [rawTransactions, setRawTransactions] = useState<Transaction[]>([])
   const [isLoading, setIsLoading] = useState(true)
+  const [isClient, setIsClient] = useState(false)
   const [filters, setFilters] = useState<TransactionFilters>({
     dateRange: { start: null, end: null },
     accounts: [],
@@ -22,10 +23,14 @@ export function useTransactions() {
   })
 
   useEffect(() => {
+    setIsClient(true)
+  }, [])
+
+  useEffect(() => {
+    if (!isClient) return
+
     const loadSavedFilters = () => {
       try {
-        if (typeof window === 'undefined') return
-        
         const savedFilters = localStorage.getItem(STORAGE_KEY)
         if (savedFilters) {
           const parsed = JSON.parse(savedFilters)
@@ -39,14 +44,12 @@ export function useTransactions() {
         }
       } catch (error) {
         console.error('Erro ao carregar filtros salvos:', error)
-        if (typeof window !== 'undefined') {
-          localStorage.removeItem(STORAGE_KEY)
-        }
+        localStorage.removeItem(STORAGE_KEY)
       }
     }
 
     loadSavedFilters()
-  }, [])
+  }, [isClient])
   useEffect(() => {
     const loadTransactions = async () => {
       try {
@@ -64,9 +67,9 @@ export function useTransactions() {
   }, [])
 
   useEffect(() => {
-    try {
-      if (typeof window === 'undefined') return
+    if (!isClient) return
 
+    try {
       const filtersToSave = {
         ...filters,
         dateRange: {
@@ -78,7 +81,7 @@ export function useTransactions() {
     } catch (error) {
       console.error('Erro ao salvar filtros:', error)
     }
-  }, [filters])
+  }, [filters, isClient])
 
   const processedTransactions = useMemo((): ProcessedTransaction[] => {
     return rawTransactions.map((transaction, index) => {
