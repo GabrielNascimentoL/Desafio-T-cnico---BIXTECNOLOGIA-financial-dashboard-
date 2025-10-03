@@ -15,9 +15,7 @@ import {
 import { useLogin } from './index.hook'
 import { LoginContainer, LoginCard, StyledInput, GradientButton } from './styles'
 
-export interface LoginProps {}
-
-export default function Login(props: LoginProps) {
+export default function Login() {
   const {
     email,
     password,

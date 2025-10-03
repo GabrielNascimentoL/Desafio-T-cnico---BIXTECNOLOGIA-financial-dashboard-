@@ -23,8 +23,8 @@ declare global {
       toHaveAccessibleName(expectedAccessibleName?: string | RegExp): R
       toHaveDisplayValue(value: string | RegExp | Array<string | RegExp>): R
       toHaveErrorMessage(expectedErrorMessage?: string | RegExp): R
-      toHaveFormValues(expectedValues: Record<string, any>): R
-      toHaveStyle(css: string | Record<string, any>): R
+      toHaveFormValues(expectedValues: Record<string, unknown>): R
+      toHaveStyle(css: string | Record<string, string | number>): R
       toBePartiallyChecked(): R
     }
   }

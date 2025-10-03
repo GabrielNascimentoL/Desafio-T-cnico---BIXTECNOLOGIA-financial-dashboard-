@@ -7,7 +7,9 @@ import {
   Text,
   Button,
   Avatar,
-  Divider
+  Divider,
+  IconButton,
+  Box
 } from '@chakra-ui/react'
 import { useSidebar } from './index.hook'
 import {
@@ -40,6 +42,26 @@ export function Sidebar({ isOpen = true, onClose }: SidebarProps) {
       isOpen={isOpen}
     >
       <VStack spacing={0} height="100%" align="stretch">
+        {/* Close button for mobile */}
+        <Box 
+          display={{ base: 'block', md: 'none' }} 
+          p={4} 
+          borderBottom="1px solid" 
+          borderColor={borderColor}
+        >
+          <HStack justify="space-between" align="center">
+            <Text fontSize="sm" fontWeight="bold" color={textColor}>
+              Menu
+            </Text>
+            <IconButton
+              aria-label="Fechar menu"
+              icon={<Text fontSize="lg">✕</Text>}
+              variant="ghost"
+              size="sm"
+              onClick={onClose}
+            />
+          </HStack>
+        </Box>
 
         <StyledUserSection>
           <HStack spacing={3}>

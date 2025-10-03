@@ -20,6 +20,16 @@ interface LineChartProps {
   title?: string
 }
 
+interface TooltipProps {
+  active?: boolean
+  payload?: Array<{
+    value: number
+    dataKey: string
+    color: string
+  }>
+  label?: string
+}
+
 export function CustomLineChart({ data, title = 'Evolução do Saldo Acumulado' }: LineChartProps) {
   const {
     bgColor,
@@ -30,7 +40,7 @@ export function CustomLineChart({ data, title = 'Evolução do Saldo Acumulado' 
     getLineColor
   } = useLineChart({ data })
 
-  const CustomTooltip = ({ active, payload, label }: any) => {
+  const CustomTooltip = ({ active, payload, label }: TooltipProps) => {
     if (active && payload && payload.length) {
       return (
         <Box

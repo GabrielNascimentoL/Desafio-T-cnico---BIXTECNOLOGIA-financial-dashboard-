@@ -2,9 +2,7 @@ import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { useAuth } from '@/contexts/AuthContext'
 
-export interface UseLoginProps {}
-
-export const useLogin = (props?: UseLoginProps) => {
+export const useLogin = () => {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
@@ -31,7 +29,7 @@ export const useLogin = (props?: UseLoginProps) => {
       } else {
         setError('Email ou senha incorretos')
       }
-    } catch (error) {
+    } catch (_error) {
       setError('Erro ao fazer login. Tente novamente.')
     } finally {
       setIsLoading(false)

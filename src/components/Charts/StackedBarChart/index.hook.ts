@@ -5,7 +5,7 @@ interface UseStackedBarChartProps {
   data: ChartData[]
 }
 
-export function useStackedBarChart({ data }: UseStackedBarChartProps) {
+export function useStackedBarChart({ data: _data }: UseStackedBarChartProps) {
   const bgColor = useColorModeValue('white', 'gray.800')
   const borderColor = useColorModeValue('gray.200', 'gray.600')
   const textColor = useColorModeValue('gray.800', 'white')

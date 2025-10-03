@@ -21,6 +21,16 @@ interface StackedBarChartProps {
   title?: string
 }
 
+interface TooltipProps {
+  active?: boolean
+  payload?: Array<{
+    value: number
+    dataKey: string
+    color: string
+  }>
+  label?: string
+}
+
 export function StackedBarChart({ data, title = 'Receitas vs Despesas por Mês' }: StackedBarChartProps) {
   const {
     bgColor,
@@ -31,7 +41,7 @@ export function StackedBarChart({ data, title = 'Receitas vs Despesas por Mês' 
     formatLegend
   } = useStackedBarChart({ data })
 
-  const CustomTooltip = ({ active, payload, label }: any) => {
+  const CustomTooltip = ({ active, payload, label }: TooltipProps) => {
     if (active && payload && payload.length) {
       return (
         <Box
@@ -43,9 +53,9 @@ export function StackedBarChart({ data, title = 'Receitas vs Despesas por Mês' 
           boxShadow="lg"
         >
           <Text fontWeight="bold" mb={2}>
-            {formatMonth(label)}
+            {label ? formatMonth(label) : 'N/A'}
           </Text>
-          {payload.map((entry: any, index: number) => (
+          {payload.map((entry: { value: number; dataKey: string; color: string }, index: number) => (
             <Text key={index} color={entry.color}>
               {entry.dataKey === 'deposits' ? 'Receitas' : 'Despesas'}: {formatCurrency(entry.value)}
             </Text>
